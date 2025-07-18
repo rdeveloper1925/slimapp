@@ -2,11 +2,14 @@
     "name": "matt/slim_poc",
     "description": "Proof that slim php is a good router coupled with file-based php",
     "require": {
-        "slim/slim": "^4.14"
+        "slim/slim": "^4.14",
+        "guzzlehttp/psr7": "^2.7"
+        
     },
     "require-dev": {
-        "maximebf/debugbar": "^2.2",
         "symfony/var-dumper": "^7.3",
+        "php-debugbar/php-debugbar": "^2.2",
+        "zeuxisoo/slim-whoops": "0.7.*",
         "filp/whoops": "^2.18"
     }
 }
