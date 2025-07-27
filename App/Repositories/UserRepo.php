@@ -36,7 +36,7 @@ class UserRepo{
                 'name'=>':name',
                 'email'=>':email',
                 'photo'=>':photo',
-                'providerId'=>'providerId'
+                'providerId'=>':providerId'
             ])->setParameters($params)->executeQuery();
     }
 
