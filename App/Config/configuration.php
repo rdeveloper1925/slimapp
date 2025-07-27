@@ -3,9 +3,11 @@ use function DI\create;
 use function DI\autowire;
 use App\Interfaces\DatabaseInterface;
 use App\Repositories\Database;
+use App\Repositories\DB;
 
 return [
-    DatabaseInterface::class => autowire(Database::class),
+    //DatabaseInterface::class => autowire(Database::class),
+    DatabaseInterface::class => autowire(DB::class),
 
     // Manually define how Database class should be constructed
     // App\Database::class => create()

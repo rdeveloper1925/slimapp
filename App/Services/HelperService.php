@@ -1,6 +1,5 @@
 <?php
 namespace App\Services;
-
 use App\Interfaces\DatabaseInterface;
 
 class HelperService{
@@ -9,6 +8,7 @@ class HelperService{
     public function __construct(DatabaseInterface $database){
         $this->db = $database;
     }
+
     public function healthCheck():array{
         $result= array();
         if($this->db->isConnected()){
@@ -25,5 +25,9 @@ class HelperService{
         
         $result['environment']=$_ENV['ENVIRONMENT'];
         return $result;
+    }
+
+    public function sayHello(){
+        return ["Welcome to my slim application that is absolutely banging."];
     }
 }

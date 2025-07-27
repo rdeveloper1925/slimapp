@@ -33,7 +33,11 @@ class Database implements DatabaseInterface
     public function connect(): void
     {
         try {
-            $dsn = "mysql:host={$this->host};port={$this->port};charset=utf8mb4";
+            $dsn = "mysql:host={$this->host};port={$this->port}";
+            if(isset($this->dbName)){
+                $dsn .= "dbname={$this->dbName};";
+            }
+            $dsn .= "charset=utf8mb4";
             $this->pdo = new PDO($dsn, $this->user, $this->pass, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -72,7 +76,7 @@ class Database implements DatabaseInterface
     }
 
     // Optional: helper to safely run a query
-    public function run(string $sql, array $params = []): mixed
+    public function execute(string $sql, array $params = []): mixed
     {
         if (!$this->isConnected()) {
             return false;
@@ -92,5 +96,22 @@ class Database implements DatabaseInterface
             ];
             return false;
         }
+    }
+
+    public function fetchAssoc(string $sql, array $params)
+    {
+        try {
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetch(PDO::FETCH_ASSOC); // Returns one row as assoc array
+        } catch (PDOException $e) {
+            // Optional: log or handle error
+            throw new \RuntimeException('Database error: ' . $e->getMessage());
+        }
+    }
+
+    public function fetchOne(string $sql, array $params)
+    {
+        
     }
 }

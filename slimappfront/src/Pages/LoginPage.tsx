@@ -3,12 +3,18 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { FirebaseAuth } from "react-firebaseui";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import {User, useUserStore} from "../Stores/Authstore";
+import { useAuthStore } from "../Stores/Authstore";
+import axios, { AxiosError } from "axios";
 
 type LoginProps = {
     message? : string | null
 }
 
 const LoginPage = (props:LoginProps) => {
+    const setUser = useAuthStore(state=>state.setUser);
+    const baseUrl = import.meta.env.VITE_BACKEND_BASE_URL;
+
 	const firebaseConfig = {
 		apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
 		authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
@@ -33,6 +39,19 @@ const LoginPage = (props:LoginProps) => {
 			// Avoid redirects after sign-in.
 			signInSuccessWithAuthResult: (authResult) => {
 				console.log(authResult, "authResult");
+                let user: User = {};
+                user['uid'] = authResult.user.uid;
+                user['email'] = authResult.user.email;
+                user['displayName'] = authResult.user.displayName;
+                user['providerId'] = authResult.user.providerData.providerId;
+                user['photoURL'] = authResult.user.providerData.photoURL;
+                console.log('user', user);
+                axios.post(baseUrl+"api/login", user).then(response=>{
+                    console.log('response user login', response);
+                    
+                }).catch((error: AxiosError)=>{
+                    console.log(error.mesage, 'reason');
+                });
 				//set global auth here,
                 //onauthstate change subscribe.
                 onAuthStateChanged(auth,(user)=>{

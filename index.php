@@ -2,6 +2,7 @@
 
 use App\Config\Routes;
 use App\Middleware\JsonMiddleware;
+use App\Middleware\ResponseWrapper;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
@@ -10,6 +11,7 @@ use DebugBar\StandardDebugBar;
 use DI\Container;
 use DI\ContainerBuilder;
 use Dotenv\Dotenv;
+use Slim\Routing\RouteCollectorProxy;
 
 require __DIR__ . '/vendor/autoload.php'; //change this if you ever move this file
 
@@ -40,11 +42,8 @@ $app->add(new WhoopsMiddleware([
     'editor' => 'vscode',
     'title'=> 'my title'
 ]));
+$app->addBodyParsingMiddleware();
 $routeParser = $app->getRouteCollector()->getRouteParser();
-
-$app->get('/tt', function(Request $request, Response $response){
-    $response->withHeader('Content-Type', 'application/json');
-});
 
 //first in, last to be executed as response
 $app->add(new JsonMiddleware());
