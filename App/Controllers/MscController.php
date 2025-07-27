@@ -38,11 +38,13 @@ class MscController
     }
 
     public function loginSignup(Request $request, Response $response){
-        $requestData = $request->getParsedBody();
+        $requestData = $request->getParsedBody() ?? [];
         $rules = [
             'email' => 'required|email',
             'uid' => 'required',
-            'displayName' => 'required'
+            'name' => 'present',
+            'providerId' => 'required',
+            'photo' => 'present'
         ];
         $result = $this->validator->validate($requestData, $rules);
         if(!$result){
@@ -51,7 +53,7 @@ class MscController
         }
 
         //write to db.
-
-        return Res::wrap($requestData, $response);
+        $uid = $this->auth->loginSignup($requestData);
+        return Res::wrap([$uid], $response, true, '', 201);
     }
 }

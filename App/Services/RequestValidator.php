@@ -27,6 +27,11 @@ class RequestValidator{
                     throw new Exception("Unassumed rule '$rule'");
                 }
 
+                if($rule == 'present'){
+                    $this->present($k, $data);
+                    continue;
+                }
+
                 if(!$this->$rule($k, $data[$k])){
                     $willReturn = false;
                 }
@@ -44,6 +49,13 @@ class RequestValidator{
         return $this->errors;
     }
 
+    public function present(string $key, array $data){
+        if(!array_key_exists($key, $data)){
+            array_push($this->errors, "$key must be present in request!");
+            return false;
+        }else return true;
+    }
+
     public function required(string $key, string $value): bool{
         if($value == '' || $value == null){
             array_push($this->errors, "$key is Required!");
@@ -55,7 +67,7 @@ class RequestValidator{
     public function email(string $key, string $email): bool{
         // Basic format validation
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            array_push($this->errors, "$key is invalid!fmt");
+            array_push($this->errors, "$key is invalid!");
             return false;
         }
 
@@ -64,25 +76,25 @@ class RequestValidator{
 
         // Ensure domain part exists
         if (empty($domain)) {
-            array_push($this->errors, "$key is invalid!dmin");
+            array_push($this->errors, "$key is invalid!");
             return false;
         }
 
         // Optional DNS check for domain validity
         if (!checkdnsrr($domain, 'MX') && !checkdnsrr($domain, 'A')) {
-            array_push($this->errors, "$key is invalid!dns");
+            array_push($this->errors, "$key is invalid!");
             return false;
         }
 
         // Check for double dots
         if (strpos($email, '..') !== false) {
-            array_push($this->errors, "$key is invalid!..");
+            array_push($this->errors, "$key is invalid!");
             return false;
         }
 
         // Check for invalid characters (basic sanity check beyond filter_var)
         if (preg_match('/[\s]/', $email) && preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i', $email) === 1) {
-            array_push($this->errors, "$key is invalid!preg");
+            array_push($this->errors, "$key is invalid!");
             return false;
         }
 
