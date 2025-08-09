@@ -3,7 +3,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { FirebaseAuth } from "react-firebaseui";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { User } from "../Stores/Authstore";
+//import { User } from "../Stores/Authstore";
 import { useAuthStore } from "../Stores/Authstore";
 import axios, { AxiosError } from "axios";
 import { Navigate, useNavigate } from "react-router-dom";

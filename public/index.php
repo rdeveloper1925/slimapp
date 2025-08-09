@@ -13,10 +13,10 @@ use DI\ContainerBuilder;
 use Dotenv\Dotenv;
 use Slim\Routing\RouteCollectorProxy;
 
-require __DIR__ . '/vendor/autoload.php'; //change this if you ever move this file
+require __DIR__ . '/../vendor/autoload.php'; //change this if you ever move this file
 
 //load environment variables. adds them to $_ENV
-$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv::createImmutable(__DIR__."/../");
 $dotenv->load();
 
 //INITIALIZE DEPENDENCY INJECTION START
