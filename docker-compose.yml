@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: slim-backend
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www/html
+      - ./backend/php.ini:/usr/local/etc/php/php.ini
+    environment:
+      - PHP_ENV=development
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./slimappfront
+      dockerfile: ../frontend/Dockerfile
+      target: development
+    container_name: slim-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./slimappfront:/app
+      - /app/node_modules
+    environment:
+      - VITE_BACKEND_BASE_URL=http://localhost:8000
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - app-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Optional: Add a reverse proxy (nginx) to serve both frontend and backend
+  nginx:
+    image: nginx:alpine
+    container_name: app-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
