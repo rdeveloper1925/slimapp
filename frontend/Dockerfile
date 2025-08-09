@@ -1,4 +1,4 @@
-# Multi-stage build for React app
+# Multi-stage build for Vite React app
 
 # Development stage
 FROM node:22-alpine as development
@@ -9,16 +9,16 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install -f
 
 # Copy source code
 COPY . .
 
-# Expose port
-EXPOSE 3000
+# Expose Vite port
+EXPOSE 5173
 
-# Start development server
-CMD ["npm", "run", "dev"]
+# Start Vite development server with host binding
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
 
 # Production build stage
 FROM node:22-alpine as build
@@ -29,7 +29,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm ci --force --only=production
 
 # Copy source code
 COPY . .
