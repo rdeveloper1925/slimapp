@@ -12,7 +12,8 @@ function App() {
   return (
     <BrowserRouter>
     <Routes>
-			<Route path="/" element={<LoginPage />} />
+			{/* <Route path="/" element={<LoginPage />} /> */}
+            <Route path='/' element={<h3>Hello</h3>} />
 			<Route path="/home" element={<AuthGuard><HomePage /></AuthGuard>}/>
 		</Routes>
     </BrowserRouter>
